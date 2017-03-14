@@ -3,6 +3,9 @@
         "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
         "http://struts.apache.org/dtds/struts-2.3.dtd">
 <struts>
+    <!--引入国际化文件-->
+    <constant name="struts.custom.i18n.resources" value="message"/>
+    <!--开启调试模式-->
     <constant name="struts.devMode" value="true"/>
     <!--制定Action对象由Spring工厂创建-->
     <constant name="struts.objectFactory" value="spring"/>
@@ -10,6 +13,10 @@
         <!-- 需要进行权限控制的页面访问 -->
         <action name="page_*_*">
             <result type="dispatcher">/WEB-INF/pages/{1}/{2}.jsp</result>
+        </action>
+        <!--用户操作-->
+        <action name="user_*" class="userAction" method="{1}">
+            <result name="login">/login.jsp</result>
         </action>
     </package>
 </struts>
