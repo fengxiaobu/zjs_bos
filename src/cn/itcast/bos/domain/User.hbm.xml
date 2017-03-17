@@ -3,13 +3,28 @@
         "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
+
     <class name="cn.itcast.bos.domain.User" table="t_user" schema="zjs_bos">
         <id name="id" column="id">
-            <generator class="native"/>
+            <generator class="assigned" />
         </id>
         <property name="name" column="name"/>
         <property name="age" column="age"/>
         <property name="address" column="address"/>
         <property name="deptId" column="dept_id"/>
+        <property name="username" column="username"/>
+        <property name="password" column="password"/>
+        <property name="salary" column="salary"/>
+        <property name="birthday" column="birthday"/>
+        <property name="gender" column="gender"/>
+        <property name="station" column="station"/>
+        <property name="telephone" column="telephone"/>
+        <property name="remark" column="remark"/>
     </class>
+    <query name="findByUsernameandPassword">
+        FROM User where username=? and password=?
+    </query>
+    <query name="editPwd">
+        update User set password=? where id=?
+    </query>
 </hibernate-mapping>

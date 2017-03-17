@@ -24,9 +24,12 @@
     <script
             src="${pageContext.request.contextPath }/js/ztree/jquery.ztree.all-3.5.js"
             type="text/javascript"></script>
+    <%--引入easyUI国际化文件--%>
     <script
             src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js"
             type="text/javascript"></script>
+    <%--防止窗口脱出浏览器--%>
+    <script src="${pageContext.request.contextPath }/js/easyui/outOfBounds.js" type="text/javascript"></script>
     <script type="text/javascript">
         // 初始化ztree菜单
         $(function () {
@@ -74,7 +77,7 @@
             window.setTimeout(function () {
                 $.messager.show({
                     title: "消息提示",
-                    msg: '欢迎登录，超级管理员！ <a href="javascript:void" onclick="top.showAbout();">联系管理员</a>',
+                    msg: '欢迎登录，${user.username}！ <a href="javascript:void" onclick="top.showAbout();">联系管理员</a>',
                     timeout: 5000
                 });
             }, 3000);
@@ -83,9 +86,28 @@
             $("#btnCancel").click(function () {
                 $('#editPwdWindow').window('close');
             });
-
+            //修改密码
             $("#btnEp").click(function () {
-                alert("修改密码");
+                var validate = $("#editPwd").form("validate");
+                if (validate) {
+
+                    var pwd1 = $("#txtNewPass").val();
+                    var pwd2 = $("#txtRePass").val();
+                    if (pwd1 == pwd2) {
+                        var url = "${pageContext.request.contextPath}/user_editPwd.action";
+                        $.post(url, {"password": pwd2}, function (data) {
+                            if (data == '1') {
+                                $.messager.alert("提示信息", "密码修改成功!", "info");
+                            } else {
+                                $.messager.alert('提示信息', '修改密码失败！', 'warning');
+                            }
+                        });
+                        //关闭修改密码窗口
+                        $("#editPwdWindow").window("close");
+                    }else {
+                        $.messager.alert('提示信息', '两次密码不一致！', 'warning');
+                    }
+                }
             });
         });
 
@@ -109,6 +131,42 @@
                 }
             }
         }
+       /* var flag =  false;
+        $.extend($.fn.validatebox.defaults.rules, {
+            oldPwd: {
+                validator: function (value, param) {
+                    var oldPwd = $("#oldPwd").val();
+                    var url = "${pageContext.request.contextPath}/user_oldPwd.action";
+                    $.post(url, {"password": value}, function (data) {
+                        if(data=="true"){
+                            flag == "true";
+                        }else {
+                            flag=="false";
+                        }
+                    });
+                    return  flag;
+                },
+                message: '原密码不正确！'
+            }
+        });*/
+        $.extend($.fn.validatebox.defaults.rules, {
+            oldPwd:{//检查原密码
+                validator: function (value) {
+                    var checkR=$.ajax({
+                        async : false,
+                        cache : false,
+                        type : 'post',
+                        url : '${pageContext.request.contextPath}/user_oldPwd.action',
+                        data : {
+                            "password": value
+                        }
+                    }).responseText;
+                    return checkR==="true";
+                },
+                message: '原密码不正确'
+            }
+
+        });
 
         /*******顶部特效 *******/
         /**
@@ -135,7 +193,7 @@
             $.messager
                 .confirm('系统提示', '您确定要退出本次登录吗?', function (isConfirm) {
                     if (isConfirm) {
-                        location.href = '${pageContext.request.contextPath }/login.jsp';
+                        location.href = '${pageContext.request.contextPath }/user_logOut.action';
                     }
                 });
         }
@@ -147,6 +205,7 @@
         function showAbout() {
             $.messager.alert("宅急送 v1.0", "管理员邮箱: zqx@itcast.cn");
         }
+
     </script>
 </head>
 <body class="easyui-layout">
@@ -158,7 +217,7 @@
     </div>
     <div id="sessionInfoDiv"
          style="position: absolute;right: 5px;top:10px;">
-        [<strong>超级管理员</strong>]，欢迎你！
+        [<strong>${user.username}</strong>]，欢迎你！
     </div>
     <div style="position: absolute; right: 5px; bottom: 10px; ">
         <a href="javascript:void(0);" class="easyui-menubutton"
@@ -222,20 +281,29 @@
 <!--修改密码窗口-->
 <div id="editPwdWindow" class="easyui-window" title="修改密码" collapsible="false" minimizable="false" modal="true"
      closed="true" resizable="false"
-     maximizable="false" icon="icon-save" style="width: 300px; height: 160px; padding: 5px;
+     maximizable="false" icon="icon-save" style="width: 300px; height: 180px; padding: 5px;
         background: #fafafa">
     <div class="easyui-layout" fit="true">
         <div region="center" border="false" style="padding: 10px; background: #fff; border: 1px solid #ccc;">
-            <table cellpadding=3>
-                <tr>
-                    <td>新密码：</td>
-                    <td><input id="txtNewPass" type="Password" class="txt01"/></td>
-                </tr>
-                <tr>
-                    <td>确认密码：</td>
-                    <td><input id="txtRePass" type="Password" class="txt01"/></td>
-                </tr>
-            </table>
+            <form id="editPwd" action="" method="post">
+                <table cellpadding=3>
+                    <tr>
+                        <td>旧密码：</td>
+                        <td><input id="oldPwd" type="Password" data-options="required:true,validType:'oldPwd'"
+                                   class="txt01 easyui-validatebox"/></td>
+                    </tr>
+                    <tr>
+                        <td>新密码：</td>
+                        <td><input id="txtNewPass" type="Password" data-options="required:true,validType:'length[3,9]'"
+                                   class="txt01 easyui-validatebox"/></td>
+                    </tr>
+                    <tr>
+                        <td>确认密码：</td>
+                        <td><input id="txtRePass" type="Password" data-options="required:true,validType:'length[3,9]'"
+                                   class="txt01 easyui-validatebox"/></td>
+                    </tr>
+                </table>
+            </form>
         </div>
         <div region="south" border="false" style="text-align: right; height: 30px; line-height: 30px;">
             <a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)">确定</a>

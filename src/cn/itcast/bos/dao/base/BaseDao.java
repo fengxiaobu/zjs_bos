@@ -1,6 +1,6 @@
 package cn.itcast.bos.dao.base;
 
-import cn.itcast.bos.domain.PageBean;
+import cn.itcast.bos.utils.PageBean;
 import org.hibernate.criterion.DetachedCriteria;
 
 import java.io.Serializable;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * luopa 在 2017/3/13 创建.
  */
-public interface IBaseDao<T> {
+public interface BaseDao<T> {
     /**
      * 添加
      * @param entity

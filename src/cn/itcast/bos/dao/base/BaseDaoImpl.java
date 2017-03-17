@@ -1,10 +1,11 @@
 package cn.itcast.bos.dao.base;
 
-import cn.itcast.bos.domain.PageBean;
+import cn.itcast.bos.utils.PageBean;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 import javax.annotation.Resource;
@@ -16,7 +17,7 @@ import java.util.List;
 /**
  * luopa 在 2017/3/13 创建.
  */
-public class BaseDaoImpl<T> extends HibernateDaoSupport implements IBaseDao<T> {
+public class BaseDaoImpl<T> extends HibernateDaoSupport implements BaseDao<T> {
     @Resource
    public void setSF(SessionFactory sessionFactory){
        super.setSessionFactory(sessionFactory);
@@ -127,6 +128,22 @@ public class BaseDaoImpl<T> extends HibernateDaoSupport implements IBaseDao<T> {
      */
     @Override
     public void pageQuery(PageBean pageBean) {
+        Integer currentPage = pageBean.getCurrentPage();//当前页数
+        Integer pageSize = pageBean.getPageSize();//每页显示数量
+        DetachedCriteria detachedCriteria = pageBean.getDetachedCriteria();//离线程序对象
+        //设置查询结果集
+        detachedCriteria.setProjection(Projections.rowCount());
+        List<Long> list = (List<Long>) this.getHibernateTemplate().findByCriteria(detachedCriteria);
+        Long aLong = list.get(0);
+        //重置查询结果集
+        detachedCriteria.setProjection(null);
+        detachedCriteria.setResultTransformer(DetachedCriteria.DISTINCT_ROOT_ENTITY);
+        Integer firstResult = (currentPage - 1) * pageSize;
+        Integer maxResults = pageSize;
+        //分页查询
+        List recordList = this.getHibernateTemplate().findByCriteria(detachedCriteria, firstResult, maxResults);
 
+        pageBean.setTotal(aLong.intValue());
+        pageBean.setRows(recordList);
     }
 }

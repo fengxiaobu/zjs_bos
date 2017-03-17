@@ -1,17 +1,24 @@
 package cn.itcast.bos.web.action.base;
 
+import cn.itcast.bos.service.UserService;
+import cn.itcast.bos.service.StaffService;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
+import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
  * luopa 在 2017/3/13 创建.
  */
-public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
-    private T model;
 
+public class BaseAction<T> extends ActionSupport implements ModelDriven<T> {
+    protected T model;
+    @Resource
+    protected UserService userService;
+    @Resource
+    protected StaffService staffService;
     public BaseAction() {
         /**
          * 获得父类类型

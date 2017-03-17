@@ -10,13 +10,31 @@
     <!--制定Action对象由Spring工厂创建-->
     <constant name="struts.objectFactory" value="spring"/>
     <package name="basicstruts2" extends="struts-default">
+        <interceptors>
+            <interceptor name="loginIntercepter" class="cn.itcast.bos.web.interceptor.LoginInterceptor">
+                <param name="excludeMethods">login</param>
+            </interceptor>
+
+            <interceptor-stack name="demo">
+                <interceptor-ref name="loginIntercepter"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="demo"/>
+        <!--全局跳转-->
+        <global-results>
+            <result name="login">/login.jsp</result>
+        </global-results>
         <!-- 需要进行权限控制的页面访问 -->
         <action name="page_*_*">
             <result type="dispatcher">/WEB-INF/pages/{1}/{2}.jsp</result>
         </action>
         <!--用户操作-->
         <action name="user_*" class="userAction" method="{1}">
-            <result name="login">/login.jsp</result>
+            <result name="home">/WEB-INF/pages/common/index.jsp</result>
+        </action>
+        <action name="staffAction_*" class="staffAction" method="{1}">
+            <result name="list">/WEB-INF/pages/base/staff.jsp</result>
         </action>
     </package>
 </struts>
