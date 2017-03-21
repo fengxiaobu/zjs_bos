@@ -26,6 +26,7 @@
     <script
             src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js"
             type="text/javascript"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.ocupload-1.1.2.js"></script>
     <script type="text/javascript">
         function doAdd() {
             $('#addSubareaWindow').window("open");
@@ -44,11 +45,18 @@
         }
 
         function doExport() {
-            alert("导出");
+            var data = $("#grid").datagrid("getRows");
+            var arr = new Array();
+            for (var i = 0; i < data.length; i++) {
+                arr.push(data[i].id);
+            }
+            var ids = arr.join(',');
+            //alert(ids);
+            window.location.href = "${pageContext.request.contextPath}/subareaAction_exportXLS.action?ids=" + ids;
         }
 
         function doImport() {
-            alert("导入");
+
         }
 
         //工具栏
@@ -160,7 +168,7 @@
                 pageList: [30, 50, 100],
                 pagination: true,
                 toolbar: toolbar,
-                url: "json/subarea.json",
+                url: "${pageContext.request.contextPath}/subareaAction_pageQuery.action",
                 idField: 'id',
                 columns: columns,
                 onDblClickRow: doDblClickRow
@@ -187,13 +195,68 @@
                 height: 400,
                 resizable: false
             });
+            //将表单数据序列化为json格式的数据
+            $.fn.serializeJson = function () {
+                var serializeObj = {};
+                var array = this.serializeArray();
+                $(array).each(function () {
+                    if (serializeObj[this.name]) {
+                        if ($.isArray(serializeObj[this.name])) {
+                            serializeObj[this.name].push(this.value);
+                        } else {
+                            serializeObj[this.name] = [serializeObj[this.name], this.value];
+                        }
+                    } else {
+                        serializeObj[this.name] = this.value;
+                    }
+                });
+                return serializeObj;
+            };
+            //查询分区
             $("#btn").click(function () {
-                alert("执行查询...");
+                var para = $("#searchForm").serializeJson();
+                //重新发送ajax请求查询
+                $("#grid").datagrid("load", para);
+                //关闭查询窗口
+                $("#searchWindow").window("close");
             });
-
+            /*导入分区*/
+            $("#button-import").upload({
+                action: "${pageContext.request.contextPath}/subareaAction_importXLS.action",
+                name: 'myFile',
+                onComplete: function (data, self, element) {
+                    if (data == "1") {
+                        $.messager.alert("系统提示", "添加成功!", "info")
+                    } else {
+                        $.messager.alert("系统提示", "添加失败!", "waring")
+                    }
+                    $('#grid').datagrid('reload');
+                }
+            });
         });
 
         function doDblClickRow() {
+            /*获取page和rows*/
+            var pg = $("#grid").datagrid("getPager");
+            alert(pg)
+            if (pg) {
+                $(pg).pagination({
+                    onBeforeRefresh: function () {
+                        alert('before refresh');
+                    },
+                    onRefresh: function (pageNumber, pageSize) {
+                        alert(pageNumber);
+                        alert(pageSize);
+                    },
+                    onChangePageSize: function () {
+                        alert('pagesize changed');
+                    },
+                    onSelectPage: function (pageNumber, pageSize) {
+                        alert(pageNumber);
+                        alert(pageSize);
+                    }
+                });
+            }
             alert("双击表格数据...");
         }
     </script>
@@ -212,7 +275,7 @@
     </div>
 
     <div style="overflow:auto;padding:5px;" border="false">
-        <form>
+        <form id="saveForm" action="${pageContext.request.contextPath}/subareaAction_save.action" method="post">
             <table class="table-edit" width="80%" align="center">
                 <tr class="title">
                     <td colspan="2">分区信息</td>
@@ -225,7 +288,21 @@
                     <td>选择区域</td>
                     <td>
                         <input class="easyui-combobox" name="region.id"
-                               data-options="valueField:'id',textField:'name',url:'json/standard.json'"/>
+                               data-options="valueField:'id',textField:'name',url:'${pageContext.request.contextPath}/regionAction_findAll.action'"/>
+                <TR>
+                    <TD align="right">地区 省级</TD>
+                    <TD align="left">
+                        <INPUT style="WIDTH: 128px" id=province class=easyui-validatebox type=text name=province
+                               validType="selectValid['--请选择--']">
+                    </TD>
+                </TR>
+                <TR>
+                    <TD align="right">地区 县市区</TD>
+                    <TD align="left">
+                        <INPUT style="WIDTH: 128px" id=city class=easyui-validatebox type=text name=city
+                               validType="selectValid['--请选择--']">
+                    </TD>
+                </TR>
                     </td>
                 </tr>
                 <tr>
@@ -263,7 +340,7 @@
 <div class="easyui-window" title="查询分区窗口" id="searchWindow" collapsible="false" minimizable="false" maximizable="false"
      style="top:20px;left:200px">
     <div style="overflow:auto;padding:5px;" border="false">
-        <form>
+        <form id="searchForm">
             <table class="table-edit" width="80%" align="center">
                 <tr class="title">
                     <td colspan="2">查询条件</td>

@@ -26,6 +26,10 @@
     <script
             src="${pageContext.request.contextPath }/js/easyui/locale/easyui-lang-zh_CN.js"
             type="text/javascript"></script>
+    <script
+            src="${pageContext.request.contextPath }/js/jquery.ocupload-1.1.2.js"
+            type="text/javascript"></script>
+
     <script type="text/javascript">
         function doAdd() {
             $('#addRegionWindow').window("open");
@@ -36,7 +40,18 @@
         }
 
         function doDelete() {
-            alert("删除...");
+            var rows = $('#grid').datagrid("getSelections")
+            if (rows.length < 0) {
+                $.messager.toLocaleString("系统提示", "请至少选择一条数据", "info");
+            } else {
+                var arr = new Array();
+                for (var i = 0; i < rows.length; i++) {
+                    arr.push(rows[i].id);
+                }
+                var ids = arr.join(',');
+                window.location.href = "${pageContext.request.contextPath}/regionAction_delete.action?ids=" + ids;
+                //$('#grid').datagrid( 'reload');
+            }
         }
 
         //工具栏
@@ -110,7 +125,7 @@
                 pageList: [30, 50, 100],
                 pagination: true,
                 toolbar: toolbar,
-                url: "json/region.json",
+                url: "${pageContext.request.contextPath}/regionAction_pageQuery.action",
                 idField: 'id',
                 columns: columns,
                 onDblClickRow: doDblClickRow
@@ -127,7 +142,22 @@
                 resizable: false
             });
 
+            $("#button-import").upload(
+                {
+                    action: '${pageContext.request.contextPath}/regionAction_importXLS.action',
+                    name: 'myFile',
+                    onComplete: function (data, self, element) {
+                        if (data == "1") {
+                            $.messager.alert("系统提示", "添加成功!", "info")
+                        } else {
+                            $.messager.alert("系统提示", "添加失败!", "waring")
+                        }
+                        $('#grid').datagrid('reload');
+                    }
+                }
+            )
         });
+
 
         function doDblClickRow() {
             alert("双击表格数据...");

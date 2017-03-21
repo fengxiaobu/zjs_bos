@@ -59,4 +59,6 @@ public interface BaseDao<T> {
      * 通用分页查询方法
      */
     public void pageQuery(PageBean pageBean);
+
+    void saveOrupdate(T t);
 }

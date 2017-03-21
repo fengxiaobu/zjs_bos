@@ -28,7 +28,7 @@
         <property name="citycode" type="java.lang.String">
             <column name="citycode" length="30" />
         </property>
-        <set name="bcSubareas" inverse="true">
+        <set name="subareas" inverse="true" lazy="false">
             <key>
                 <column name="region_id" length="32" />
             </key>

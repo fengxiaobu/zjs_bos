@@ -101,5 +101,15 @@
         href="http://download.firefox.com.cn/releases/full/23.0/zh-CN/Firefox-full-latest.exe">Firefox</a>
 		</span><span style="float: right; color: #488ED5;">宅急送BOS系统</span>
 </div>
+
+<script type="text/javascript">
+    $(document).keydown(function (event) {
+        //判断当event.keyCode 为39时（即右方面键），执行函数to_right();
+        if (event.keyCode == 13) {
+            $('#loginform').submit();
+        }
+    });
+</script>
+
 </body>
 </html>

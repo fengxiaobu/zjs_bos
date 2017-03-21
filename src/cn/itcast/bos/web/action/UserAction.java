@@ -68,7 +68,6 @@ public class UserAction extends BaseAction<User> {
         }
         ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
         ServletActionContext.getResponse().getWriter().print(ms);
-        System.out.println("ms = " + ms);
         return NONE;
     }
 }

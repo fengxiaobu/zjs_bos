@@ -18,7 +18,7 @@ public class Region implements java.io.Serializable {
 	private String postcode;
 	private String shortcode;
 	private String citycode;
-	private Set bcSubareas = new HashSet(0);
+    private Set subareas = new HashSet(0);
 
 	// Constructors
 
@@ -28,80 +28,93 @@ public class Region implements java.io.Serializable {
 
 	/** full constructor */
 	public Region(String province, String city, String district,
-			String postcode, String shortcode, String citycode, Set bcSubareas) {
-		this.province = province;
+                  String postcode, String shortcode, String citycode, Set subareas) {
+        this.province = province;
 		this.city = city;
 		this.district = district;
 		this.postcode = postcode;
 		this.shortcode = shortcode;
 		this.citycode = citycode;
-		this.bcSubareas = bcSubareas;
-	}
+        this.subareas = subareas;
+    }
 
-	// Property accessors
+    public Region(String id, String province, String city, String district, String postcode, String shortcode, String citycode) {
+        this.id = id;
+        this.province = province;
+        this.city = city;
+        this.district = district;
+        this.postcode = postcode;
+        this.shortcode = shortcode;
+        this.citycode = citycode;
+    }
+
+    public String getName() {
+        return province + city + district;
+    }
+    // Property accessors
+
 
 	public String getId() {
-		return this.id;
-	}
+        return id;
+    }
 
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	public String getProvince() {
-		return this.province;
-	}
+        return province;
+    }
 
 	public void setProvince(String province) {
 		this.province = province;
 	}
 
 	public String getCity() {
-		return this.city;
-	}
+        return city;
+    }
 
 	public void setCity(String city) {
 		this.city = city;
 	}
 
 	public String getDistrict() {
-		return this.district;
-	}
+        return district;
+    }
 
 	public void setDistrict(String district) {
 		this.district = district;
 	}
 
 	public String getPostcode() {
-		return this.postcode;
-	}
+        return postcode;
+    }
 
 	public void setPostcode(String postcode) {
 		this.postcode = postcode;
 	}
 
 	public String getShortcode() {
-		return this.shortcode;
-	}
+        return shortcode;
+    }
 
 	public void setShortcode(String shortcode) {
 		this.shortcode = shortcode;
 	}
 
 	public String getCitycode() {
-		return this.citycode;
-	}
+        return citycode;
+    }
 
 	public void setCitycode(String citycode) {
 		this.citycode = citycode;
 	}
 
-	public Set getBcSubareas() {
-		return this.bcSubareas;
-	}
+    public Set getSubareas() {
+        return subareas;
+    }
 
-	public void setBcSubareas(Set bcSubareas) {
-		this.bcSubareas = bcSubareas;
-	}
-
+    public void setSubareas(Set subareas) {
+        this.subareas = subareas;
+    }
 }

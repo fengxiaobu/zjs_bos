@@ -28,7 +28,7 @@
         <property name="standard" type="java.lang.String">
             <column name="standard" length="100" />
         </property>
-        <set name="bcDecidedzones" inverse="true">
+        <set name="decidedzones" inverse="true">
             <key>
                 <column name="staff_id" length="32" />
             </key>

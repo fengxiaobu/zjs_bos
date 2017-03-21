@@ -6,7 +6,7 @@
     <!--引入国际化文件-->
     <constant name="struts.custom.i18n.resources" value="message"/>
     <!--开启调试模式-->
-    <constant name="struts.devMode" value="true"/>
+    <constant name="struts.devMode" value="false"/>
     <!--制定Action对象由Spring工厂创建-->
     <constant name="struts.objectFactory" value="spring"/>
     <package name="basicstruts2" extends="struts-default">
@@ -35,6 +35,12 @@
         </action>
         <action name="staffAction_*" class="staffAction" method="{1}">
             <result name="list">/WEB-INF/pages/base/staff.jsp</result>
+        </action>
+        <action name="regionAction_*" class="regionAction" method="{1}">
+            <result name="list">/WEB-INF/pages/base/region.jsp</result>
+        </action>
+        <action name="subareaAction_*" class="subareaAction" method="{1}">
+            <result name="list">/WEB-INF/pages/base/region.jsp</result>
         </action>
     </package>
 </struts>

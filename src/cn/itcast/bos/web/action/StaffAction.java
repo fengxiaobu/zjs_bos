@@ -1,12 +1,7 @@
 package cn.itcast.bos.web.action;
 
 import cn.itcast.bos.domain.Staff;
-import cn.itcast.bos.utils.PageBean;
 import cn.itcast.bos.web.action.base.BaseAction;
-import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
-import org.apache.struts2.ServletActionContext;
-import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
@@ -18,8 +13,7 @@ import java.io.IOException;
 @Controller
 @Scope("prototype")
 public class StaffAction extends BaseAction<Staff> {
-    private Integer page;
-    private Integer rows;
+
     private String ids;
 
     public String save() {
@@ -33,20 +27,8 @@ public class StaffAction extends BaseAction<Staff> {
      * @return
      */
     public String pageQuery() throws IOException {
-        PageBean pageBean = new PageBean();
-        pageBean.setCurrentPage(page);
-        pageBean.setPageSize(rows);
-
-        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Staff.class);
-        pageBean.setDetachedCriteria(detachedCriteria);
-
         staffService.pageQuery(pageBean);
-        JsonConfig jsonConfig = new JsonConfig();
-        jsonConfig.setExcludes(new String[]{"currentPage", "pageSize", "detachedCriteria"});
-        JSONObject jsonObject = JSONObject.fromObject(pageBean, jsonConfig);
-        ServletActionContext.getResponse().setContentType("text/json;charset=utf-8");
-        System.out.println("jsonObject = " + jsonObject.toString());
-        ServletActionContext.getResponse().getWriter().print(jsonObject.toString());
+        this.writePageBeanToJSON(pageBean, new String[]{"decidedzones", "currentPage", "pageSize", "detachedCriteria"});
         return NONE;
     }
 
@@ -75,13 +57,7 @@ public class StaffAction extends BaseAction<Staff> {
         staffService.restore(ids);
         return "list";
     }
-    public Integer getPage() {
-        return page;
-    }
 
-    public Integer getRows() {
-        return rows;
-    }
 
     public String getIds() {
         return ids;
@@ -89,14 +65,6 @@ public class StaffAction extends BaseAction<Staff> {
 
     public void setIds(String ids) {
         this.ids = ids;
-    }
-
-    public void setPage(Integer page) {
-        this.page = page;
-    }
-
-    public void setRows(Integer rows) {
-        this.rows = rows;
     }
 
     public void setSid(String ids) {

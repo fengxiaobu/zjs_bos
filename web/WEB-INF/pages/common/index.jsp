@@ -131,24 +131,7 @@
                 }
             }
         }
-       /* var flag =  false;
-        $.extend($.fn.validatebox.defaults.rules, {
-            oldPwd: {
-                validator: function (value, param) {
-                    var oldPwd = $("#oldPwd").val();
-                    var url = "${pageContext.request.contextPath}/user_oldPwd.action";
-                    $.post(url, {"password": value}, function (data) {
-                        if(data=="true"){
-                            flag == "true";
-                        }else {
-                            flag=="false";
-                        }
-                    });
-                    return  flag;
-                },
-                message: '原密码不正确！'
-            }
-        });*/
+
         $.extend($.fn.validatebox.defaults.rules, {
             oldPwd:{//检查原密码
                 validator: function (value) {
@@ -225,6 +208,7 @@
         <a href="javascript:void(0);" class="easyui-menubutton"
            data-options="menu:'#layout_north_kzmbMenu',iconCls:'icon-help'">控制面板</a>
     </div>
+    <%--更改主题--%>
     <div id="layout_north_pfMenu" style="width: 120px; display: none;">
         <div onclick="changeTheme('default');">default</div>
         <div onclick="changeTheme('gray');">gray</div>
@@ -232,6 +216,7 @@
         <div onclick="changeTheme('bootstrap');">bootstrap</div>
         <div onclick="changeTheme('metro');">metro</div>
     </div>
+    <%--控制面板--%>
     <div id="layout_north_kzmbMenu" style="width: 100px; display: none;">
         <div onclick="editPassword();">修改密码</div>
         <div onclick="showAbout();">联系管理员</div>

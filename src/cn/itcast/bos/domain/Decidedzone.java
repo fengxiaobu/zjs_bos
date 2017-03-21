@@ -14,7 +14,7 @@ public class Decidedzone implements java.io.Serializable {
 	private String id;
 	private Staff staff;
 	private String name;
-	private Set bcSubareas = new HashSet(0);
+    private Set subareas = new HashSet(0);
 
 	// Constructors
 
@@ -23,11 +23,11 @@ public class Decidedzone implements java.io.Serializable {
 	}
 
 	/** full constructor */
-	public Decidedzone(Staff staff, String name, Set bcSubareas) {
-		this.staff = staff;
+    public Decidedzone(Staff staff, String name, Set subareas) {
+        this.staff = staff;
 		this.name = name;
-		this.bcSubareas = bcSubareas;
-	}
+        this.subareas = subareas;
+    }
 
 	// Property accessors
 
@@ -39,12 +39,12 @@ public class Decidedzone implements java.io.Serializable {
 		this.id = id;
 	}
 
-	public Staff getBcStaff() {
-		return this.staff;
+    public Staff getStaff() {
+        return this.staff;
 	}
 
-	public void setBcStaff(Staff staff) {
-		this.staff = staff;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
 	}
 
 	public String getName() {
@@ -55,12 +55,12 @@ public class Decidedzone implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public Set getBcSubareas() {
-		return this.bcSubareas;
-	}
+    public Set getSubareas() {
+        return this.subareas;
+    }
 
-	public void setBcSubareas(Set bcSubareas) {
-		this.bcSubareas = bcSubareas;
-	}
+    public void setSubareas(Set subareas) {
+        this.subareas = subareas;
+    }
 
 }
