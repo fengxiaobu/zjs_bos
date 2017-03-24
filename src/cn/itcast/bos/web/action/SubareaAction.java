@@ -136,4 +136,14 @@ public class SubareaAction extends BaseAction<Subarea> {
         workbook.write(outputStream);
         return NONE;
     }
+
+    public String findSubareaByAjax(){
+        DetachedCriteria dc = DetachedCriteria.forClass(Subarea.class);
+        //添加过滤条件：未分配到定区的分区
+        dc.add(Restrictions.isNull("decidedzone"));
+        List<Subarea> list = subareaService.findByCondition(dc);
+        String[] excludes = new String[]{"decidedzone","region","startnum","endnum","single"};
+        this.writeListToJSON(list,excludes);
+        return NONE;
+    }
 }

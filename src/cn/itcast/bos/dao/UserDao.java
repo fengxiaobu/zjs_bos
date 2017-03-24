@@ -7,4 +7,5 @@ import cn.itcast.bos.domain.User;
  * luopa 在 2017/3/13 创建.
  */
 public interface UserDao extends BaseDao<User> {
+    User findUserByUsername(String username);
 }

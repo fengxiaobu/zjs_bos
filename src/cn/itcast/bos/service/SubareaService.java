@@ -2,6 +2,7 @@ package cn.itcast.bos.service;
 
 import cn.itcast.bos.domain.Subarea;
 import cn.itcast.bos.utils.PageBean;
+import org.hibernate.criterion.DetachedCriteria;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface SubareaService {
     void saveBatch(List<Subarea> list);
 
     List<Subarea> findSubareasByIDs(String ids);
+
+    List<Subarea> findByCondition(DetachedCriteria dc);
 }

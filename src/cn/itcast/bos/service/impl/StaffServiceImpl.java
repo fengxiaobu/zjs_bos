@@ -4,10 +4,12 @@ import cn.itcast.bos.dao.StaffDao;
 import cn.itcast.bos.domain.Staff;
 import cn.itcast.bos.service.StaffService;
 import cn.itcast.bos.utils.PageBean;
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * luopa 在 2017/3/16 创建.
@@ -26,15 +28,6 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public void pageQuery(PageBean pageBean) {
         staffDao.pageQuery(pageBean);
-        /*for (int i = 0; i < 200; i++) {
-            Staff staff=new Staff();
-            staff.setId("zjs"+i);
-            staff.setName("测试"+i);
-            staff.setTelephone("15330011918");
-            staff.setStandard(i+"kg");
-            staff.setStation(i+"栋"+i+"单元");
-            staffDao.save(staff);
-        }*/
     }
 
     @Override
@@ -63,5 +56,10 @@ public class StaffServiceImpl implements StaffService {
             Staff staff = staffDao.findByID(split[i]);
             staff.setDeltag("0");
         }
+    }
+
+    @Override
+    public List<Staff> findByCondition(DetachedCriteria dc) {
+        return staffDao.findByCriteria(dc);
     }
 }

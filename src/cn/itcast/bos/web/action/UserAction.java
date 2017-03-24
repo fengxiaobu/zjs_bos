@@ -1,8 +1,15 @@
 package cn.itcast.bos.web.action;
 
 import cn.itcast.bos.domain.User;
+import cn.itcast.bos.utils.MD5Utils;
 import cn.itcast.bos.web.action.base.BaseAction;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -23,7 +30,30 @@ public class UserAction extends BaseAction<User> {
             this.addActionError(this.getText("checKeykError"));
             return "login";
         }else {
-            System.out.println("model = " + model.getUsername());
+            Subject subject = SecurityUtils.getSubject();
+            AuthenticationToken token = new UsernamePasswordToken(model.getUsername(), MD5Utils.md5(model.getPassword()));
+            try {
+                subject.login(token);
+                User user = (User) subject.getPrincipal();
+                ServletActionContext.getRequest().getSession().setAttribute("user", user);
+            } catch (UnknownAccountException e) {
+                this.addActionError("用户不存在!");
+                return "login";
+            } catch (IncorrectCredentialsException e) {
+                this.addActionError("密码错误!");
+                return "login";
+            }
+            return "home";
+        }
+    }
+
+    public String login_bak() {
+        String checkcode = ServletActionContext.getRequest().getParameter("checkcode");
+        Object key = ServletActionContext.getRequest().getSession().getAttribute("key");
+        if (StringUtils.isBlank(checkcode) || !checkcode.equals(key)) {
+            this.addActionError(this.getText("checKeykError"));
+            return "login";
+        } else {
             User user = userService.login(model);
             if (user == null) {
                 this.addActionError(this.getText("loginError"));

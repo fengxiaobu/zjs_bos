@@ -16,7 +16,7 @@
             </interceptor>
 
             <interceptor-stack name="demo">
-                <interceptor-ref name="loginIntercepter"/>
+               <!-- <interceptor-ref name="loginIntercepter"/>-->
                 <interceptor-ref name="defaultStack"/>
             </interceptor-stack>
         </interceptors>
@@ -33,14 +33,25 @@
         <action name="user_*" class="userAction" method="{1}">
             <result name="home">/WEB-INF/pages/common/index.jsp</result>
         </action>
+        <!--取派员-->
         <action name="staffAction_*" class="staffAction" method="{1}">
             <result name="list">/WEB-INF/pages/base/staff.jsp</result>
         </action>
+        <!--区域-->
         <action name="regionAction_*" class="regionAction" method="{1}">
             <result name="list">/WEB-INF/pages/base/region.jsp</result>
         </action>
+        <!--分区-->
         <action name="subareaAction_*" class="subareaAction" method="{1}">
             <result name="list">/WEB-INF/pages/base/region.jsp</result>
+        </action>
+        <!--定区-->
+        <action name="decidedzoneAction_*" class="decidedzoneAction" method="{1}">
+            <result name="list">/WEB-INF/pages/base/decidedzone.jsp</result>
+        </action>
+        <!--工单-->
+        <action name="noticebillAction_*" class="noticebillAction" method="{1}">
+            <result name="toSave">/WEB-INF/pages/qupai/noticebill_add.jsp</result>
         </action>
     </package>
 </struts>

@@ -1,12 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE hibernate-mapping PUBLIC
-        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="cn.itcast.bos.domain.User" table="t_user">
-        <id name="id" column="id">
-            <generator class="assigned"/>
-        </id>
+
+    <class name="cn.itcast.bos.domain.User" table="t_user" schema="zjs_bos">
+        <id name="id" column="id"/>
         <property name="username" column="username"/>
         <property name="password" column="password"/>
         <property name="salary" column="salary"/>
@@ -19,11 +18,27 @@
         <property name="age" column="age"/>
         <property name="address" column="address"/>
         <property name="deptId" column="dept_id"/>
+        <set name="noticebills" inverse="true">
+            <key>
+                <column name="user_id" />
+            </key>
+            <one-to-many not-found="ignore" class="cn.itcast.bos.domain.Noticebill"/>
+        </set>
+        <set name="roles" table="user_role" inverse="true">
+            <key>
+                <column name="user_id" length="32"  />
+            </key>
+            <many-to-many entity-name="cn.itcast.bos.domain.Role">
+                <column name="role_id" length="32"  />
+            </many-to-many>
+        </set>
     </class>
-    <query name="findByUsernameandPassword">
-        from User where username =? and password=?
+    <!-- 命名查询语句 -->
+    <query name="findByUsernameAndPassword">
+        FROM User WHERE username = ? AND password = ?
     </query>
-    <query name="editPwd">
-        update User set password=? where id=?
+    <!-- 修改密码 -->
+    <query name="editPassword">
+        UPDATE User SET password = ? WHERE id = ?
     </query>
 </hibernate-mapping>

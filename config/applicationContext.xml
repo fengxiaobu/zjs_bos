@@ -50,4 +50,31 @@
 
     <!--支持事务管理-->
     <tx:annotation-driven transaction-manager="transactionManager"/>
+    <bean id="customerService" class="org.springframework.remoting.caucho.HessianProxyFactoryBean">
+        <property name="serviceInterface" value="cn.itcast.crm.service.CustomerService"/>
+        <property name="serviceUrl" value="http://localhost:8080/crm/remoting/customer"/>
+    </bean>
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login.jsp"/>
+        <property name="successUrl" value="/index.jsp"/>
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <property name="filterChainDefinitions">
+            <value>
+                /images/**=anon
+                /css/**=anon
+                /js/**=anon
+                /json/**=anon
+                /login.jsp*=anon
+                /validatecode.jsp*=anon
+                /user_login.action*=anon
+                /*=authc
+            </value>
+        </property>
+    </bean>
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="bosRealm"/>
+    </bean>
+    <bean id="bosRealm" class="cn.itcast.bos.web.shiro.BosRealm"></bean>
 </beans>

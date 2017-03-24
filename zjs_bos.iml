@@ -30,7 +30,7 @@
       <configuration>
         <datasource-map>
           <unit-entry name="a.xml" value="9e1e9356-915c-4b15-b862-85345e8b6671" />
-          <unit-entry name="sessionFactory" value="9999e16f-6c65-47c2-817c-15dfe476d9a4" />
+          <unit-entry name="sessionFactory" value="ef7b279d-2eb8-4d3c-b324-dc7abf423595" />
         </datasource-map>
         <naming-strategy-map />
       </configuration>

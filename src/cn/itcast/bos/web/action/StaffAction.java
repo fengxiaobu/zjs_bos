@@ -2,10 +2,13 @@ package cn.itcast.bos.web.action;
 
 import cn.itcast.bos.domain.Staff;
 import cn.itcast.bos.web.action.base.BaseAction;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * luopa 在 2017/3/16 创建.
@@ -58,7 +61,22 @@ public class StaffAction extends BaseAction<Staff> {
         return "list";
     }
 
+    /**
+     * 查询取派员数据，返回json
+     */
+    public String findStaffByAjax(){
+        //提供离线条件查询对象，包装查询条件
+        DetachedCriteria dc = DetachedCriteria.forClass(Staff.class);
+        //添加过滤条件：删除标志deltag等于“0”
+        dc.add(Restrictions.eq("deltag", "0"));
+        //添加过滤条件：没有负责定区取派员
+        dc.add(Restrictions.isEmpty("decidedzones"));
+        List<Staff> list = staffService.findByCondition(dc);
 
+        String[] excludes = new String[]{"decidedzones","standard","station","deltag","haspda","telephone"};
+        this.writeListToJSON(list, excludes);
+        return NONE;
+    }
     public String getIds() {
         return ids;
     }

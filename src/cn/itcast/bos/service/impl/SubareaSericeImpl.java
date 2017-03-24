@@ -4,6 +4,7 @@ import cn.itcast.bos.dao.SubareaDao;
 import cn.itcast.bos.domain.Subarea;
 import cn.itcast.bos.service.SubareaService;
 import cn.itcast.bos.utils.PageBean;
+import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,5 +42,10 @@ public class SubareaSericeImpl implements SubareaService {
             subareaList.add(subarea);
         }
         return subareaList;
+    }
+
+    @Override
+    public List<Subarea> findByCondition(DetachedCriteria dc) {
+        return subareaDao.findByCriteria(dc);
     }
 }

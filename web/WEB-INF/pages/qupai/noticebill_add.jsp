@@ -52,13 +52,36 @@
     </div>
 </div>
 <div region="center" style="overflow:auto;padding:5px;" border="false">
-    <form id="noticebillForm" action="" method="post">
+    <form id="noticebillForm" action="${pageContext.request.contextPath}/noticebillAction_save.action" method="post">
         <table class="table-edit" width="95%" align="center">
             <tr class="title">
                 <td colspan="4">客户信息</td>
             </tr>
             <tr>
+                <%--根据手机号码动态查询数据并自动添加到对应的输入框--%>
+                <script type="text/javascript">
+                    $(function () {
+                        $("input[name=telephone]").blur(function () {
+                            var phone = this.value;
+                            var url = "${pageContext.request.contextPath}/noticebillAction_findCustomerByPhone.action";
+                            $.post(url, {"phone": phone}, function (data) {
+                                $("input[name=customerId]").val("");
+                                $("input[name=customerName]").val("");
+                                $("input[name=delegater]").val("");
+                                $("input[name=pickaddress]").val("");
+                                if (data != null) {
+                                    //将客户的信息显示到当前页面上
+                                    $("input[name=customerId]").val(data.id);
+                                    $("input[name=customerName]").val(data.name);
+                                    $("input[name=delegater]").val(data.name);
+                                    $("input[name=pickaddress]").val(data.address);
+                                }
+                            });
+                        })
+                    })
+                </script>
                 <td>来电号码:</td>
+
                 <td><input type="text" class="easyui-validatebox" name="telephone"
                            required="true"/></td>
                 <td>客户编号:</td>

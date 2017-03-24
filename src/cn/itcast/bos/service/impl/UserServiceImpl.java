@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User login(User model) {
         String password = MD5Utils.md5(model.getPassword());
-        List<User> userList = (List<User>) userDao.findByNamedQuery("findByUsernameandPassword", model.getUsername(), password);
+        List<User> userList = (List<User>) userDao.findByNamedQuery("findByUsernameAndPassword", model.getUsername(), password);
         if (userList != null && userList.size() > 0) {
             return userList.get(0);
         }
@@ -33,13 +33,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editPwd(String password, String id) {
         password = MD5Utils.md5(password);
-        userDao.executeNamedQuery("editPwd", password, id);
+        userDao.executeNamedQuery("editPassword", password, id);
     }
 
     @Override
     public User oldPwd(String password, String username) {
         password = MD5Utils.md5(password);
-        List<User> userList = (List<User>) userDao.findByNamedQuery("findByUsernameandPassword", username, password);
+        List<User> userList = (List<User>) userDao.findByNamedQuery("findByUsernameAndPassword", username, password);
         if (userList != null && userList.size() > 0) {
             return userList.get(0);
         }
